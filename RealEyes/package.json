@@ -1,0 +1,15 @@
+{
+  "name": "realeyes",
+  "version": "1.0.0",
+  "description": "coding challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Kleckner",
+  "license": "ISC",
+  "dependencies": {
+    "hls.js": "^0.9.1",
+    "videojs-contrib-hls": "^5.14.1"
+  }
+}

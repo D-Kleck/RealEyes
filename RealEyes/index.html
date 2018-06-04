@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>RealEyes Web Coding Challenge</title>
+    <style>
+      .btn-group button {
+          background-color: #4CAF50; /* Green background */
+          border: 1px solid green; /* Green border */
+          color: white; /* White text */
+          padding: 10px 24px; /* Some padding */
+          cursor: pointer; /* Pointer/hand icon */
+          float: left; /* Float the buttons side by side */
+      }
+
+      /* Clear floats (clearfix hack) */
+      .btn-group:after {
+          content: "";
+          clear: both;
+          display: table;
+      }
+
+      .btn-group button:not(:last-child) {
+          border-right: none; /* Prevent double borders */
+      }
+
+      /* Add a background color on hover */
+      .btn-group button:hover {
+          background-color: #3e8e41;
+      }
+      </style>
+  </head>
+  <body>
+    <br>
+    <div class="btn-group" onclick="buttonClick('https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8')" style="width:50%">
+      <button style="width:70%">Video 1<br />
+        <source src = "https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
+      </button>
+    </div>
+
+    <div class="btn-group" onclick="buttonClick('https://video-dev.github.io/streams/test_001/stream.m3u8')" style="width:50%">
+      <button style="width:70%">Video 2 <br />
+        <source src = "https://video-dev.github.io/streams/test_001/stream.m3u8" type="application/x-mpegURL">
+      </button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Or if you want a more recent canary version -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@canary"></script> -->
+    <video id="video" width="640" height="480" type="application/x-mpegURL" autoplay=""></video>
+    <!-- Video Controls -->
+    <div id='controls'>
+			<progress id='progress-bar' min='0' max='100' value='0'>0% played</progress>
+			<button id='btnReplay' class='replay' title='replay' accesskey="R" onclick='replayVideo();'>Replay</button>
+			<button id='btnPlayPause' class='play' title='play' accesskey="P" onclick='playPauseVideo();'>Play</button>
+			<button id='btnStop' class='stop' title='stop' accesskey="X" onclick='stopVideo();'>Stop</button>
+      <input type="range" id="volume-bar" title="volume" min="0" max="1" step="0.1" value="1">
+			<button id='btnMute' class='mute' title='mute' onclick='muteVolume();'>Mute</button>
+      <button id='btnFullScreen' class='fullscreen' title='toggle full screen' accesskey="T" onclick='toggleFullScreen();'>[&nbsp;&nbsp;]</button>
+		</div>
+    <script>
+      // Get the elements with class="column"
+      var elements = document.getElementsByClassName("btn-group");
+
+      // Declare a loop variable &
+      var i;
+
+      function buttonClick(vLink){
+        var video = document.getElementById('video');
+        if(Hls.isSupported()) {
+          var hls = new Hls();
+          hls.loadSource(vLink);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            video.controls = true;
+            video.play();
+        });
+       }
+       // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+       // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+       // This is using the built-in support of the plain video element, without using hls.js.
+       // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
+       // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8';
+          video.addEventListener('loadedmetadata',function() {
+            video.controls = true;
+            video.play();
+          });
+        }
+      }
+      // List View
+      function listView() {
+        for (i = 0; i < elements.length; i++){
+            elements[i].style.width = "50%";
+          }
+      }
+      listView()
+    </script>
+    <script src="controls.js"></script>
+  </body>
+</html>
